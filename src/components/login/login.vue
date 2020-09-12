@@ -1,7 +1,6 @@
 <template>
   <div class="bg">
     <div class="loginBox">
-      <h3>用户登录</h3>
       <el-form
         label-position="top"
         label-width="80px"
@@ -9,8 +8,9 @@
         :rules="rules"
         :model="userObj"
       >
-        <el-form-item label="用户名" prop="username" >
-          <el-input type='text' v-model="userObj.username"></el-input>
+        <h3>用户登录</h3>
+        <el-form-item label="用户名" prop="username">
+          <el-input type="text" v-model="userObj.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="userObj.password" show-password></el-input>
@@ -30,8 +30,10 @@ export default {
         password: "",
       },
       rules: {
-        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
     };
   },
@@ -49,7 +51,7 @@ export default {
               console.log(res);
               let { data, meta } = res.data;
               if (meta.status === 200) {
-                window.localStorage.setItem('token',data.token)
+                window.localStorage.setItem("token", data.token);
                 console.log(meta.msg);
                 console.log(data);
                 this.$router.push("/");
@@ -69,6 +71,9 @@ export default {
 </script>
 
 <style>
+.el-form h3{
+  color: cornflowerblue;
+}
 .bg {
   width: 100%;
   height: 100%;
