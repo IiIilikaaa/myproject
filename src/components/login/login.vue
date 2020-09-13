@@ -52,11 +52,11 @@ export default {
               let { data, meta } = res.data;
               if (meta.status === 200) {
                 window.localStorage.setItem("token", data.token);
-                console.log(meta.msg);
-                console.log(data);
+                // console.log(meta.msg);
+                // console.log(data);
                 this.$router.push("/");
               } else {
-                console.log(meta.msg);
+                // console.log(meta.msg);
               }
             })
             .catch((err) => {});

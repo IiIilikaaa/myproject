@@ -1,12 +1,12 @@
 <template>
   <el-aside width="250px">
-        <el-menu class="el-menu-vertical-demo" :unique-opened='true'>
+        <el-menu class="el-menu-vertical-demo" :unique-opened='true' router>
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="1-1">
+            <el-menu-item index="/users">
               <i class="el-icon-menu"></i>
               <span>用户列表</span>
             </el-menu-item>
