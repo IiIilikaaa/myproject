@@ -43,7 +43,7 @@ export default {
       this.$refs.rulesName.validate((valid) => {
         if (valid) {
           this.$http({
-            url: "http://localhost:8888/api/private/v1/login",
+            url: "login",
             method: "POST",
             data: this.userObj,
           })
