@@ -14,7 +14,7 @@
         </el-input>
       </el-col>
       <el-col :span="6" class="col-btn">
-        <el-button type="success" plain>添加用户</el-button>
+        <el-button type="success" plain @click="show">添加用户</el-button>
       </el-col>
     </el-row>
     <!-- 表格区域 -->
@@ -31,10 +31,23 @@
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <template>
-          <el-button type="primary" icon="el-icon-edit" circle size="mini"></el-button>
+        <template slot-scope="scope">
+          {{scope.row.id}}
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            size="mini"
+            @click="editShow(scope.row.id)"
+          ></el-button>
           <el-button type="success" icon="el-icon-check" circle size="mini"></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle size="mini"></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            size="mini"
+            @click="del(scope.row.id)"
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,6 +63,47 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
+    <!-- 新增页面 -->
+    <el-dialog title="新增用户" :visible.sync="isShow">
+      <!-- {{form}} -->
+      <el-form :model="addForm">
+        <el-form-item label="用户名" :label-width="dialogWidth">
+          <el-input v-model="addForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="dialogWidth">
+          <el-input type="password" v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" :label-width="dialogWidth">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" :label-width="dialogWidth">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="hide">取 消</el-button>
+        <el-button type="primary" @click="addFn">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 编辑页面 -->
+    <el-dialog title="编辑信息" :visible.sync="isShowEdit">
+      <!-- {{form}} -->
+      <el-form :model="editForm">
+        <el-form-item label="用户名" :label-width="dialogWidth">
+          <el-input v-model="editForm.username" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" :label-width="dialogWidth">
+          <el-input v-model="editForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" :label-width="dialogWidth">
+          <el-input v-model="editForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editHide">取 消</el-button>
+        <el-button type="primary" @click="editFn">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -64,11 +118,32 @@ export default {
       //页码集合
       pagesizes: [1, 2, 3, 5],
       //每页显示数据的条数
-      pagesize: 2,
+      pagesize: 5,
       //数据总条数
       total: 0,
       //查询参数
       query: "",
+
+      //新增显示
+      isShow: false,
+      //新增框的宽
+      dialogWidth: "100px",
+      //新增框数据
+      addForm: {
+        username: "",
+        password: "",
+        email: "",
+        mobile: "",
+      },
+      //编辑框显示
+      isShowEdit: false,
+      //编辑数据
+      editForm: {
+        id: "",
+        username: "",
+        email: "",
+        mobile: "",
+      },
     };
   },
   methods: {
@@ -84,6 +159,11 @@ export default {
           //解构
           let { data, meta } = res.data;
           if (meta.status === 200) {
+            if (data.users.length === 0 && this.pagenum !== 1) {
+              this.pagenum--;
+              this.getDataList();
+              return;
+            }
             this.tableData = data.users;
             this.total = data.total;
           }
@@ -105,6 +185,122 @@ export default {
     //搜索用户
     searchUser() {
       this.getDataList();
+    },
+    //新增框的显示
+    show() {
+      this.isShow = true;
+    },
+    //新增框的隐藏
+    hide() {
+      this.isShow = false;
+      this.addForm.username = "";
+      this.addForm.password = "";
+      this.addForm.email = "";
+      this.addForm.mobile = "";
+    },
+    //新增用户
+    addFn() {
+      this.$http({
+        url: "http://localhost:8888/api/private/v1/users",
+        method: "POST",
+        data: this.addForm,
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      }).then((res) => {
+        // console.log(res);
+        let { meta } = res.data;
+        if (meta.status === 201) {
+          this.$message({
+            message: meta.msg,
+            type: "success",
+          });
+          this.getDataList();
+          this.isShow = false;
+          this.addForm.username = "";
+          this.addForm.password = "";
+          this.addForm.email = "";
+          this.addForm.mobile = "";
+        } else {
+          this.$message.error(meta.msg);
+        }
+      });
+    },
+    //删除用户
+    del(id) {
+      this.$http({
+        url: `http://localhost:8888/api/private/v1/users/${id}`,
+        method: "DELETE",
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      }).then((res) => {
+        // console.log(res);
+        let { meta } = res.data;
+        if (meta.status === 200) {
+          this.getDataList();
+          this.$message({
+            message: meta.msg,
+            type: "success",
+          });
+        } else {
+          this.$message.error(meta.msg);
+        }
+      });
+    },
+
+    //编辑框显示
+    //根据id获取数据
+    editShow(id) {
+      this.isShowEdit = true;
+      this.$http({
+        url: `http://localhost:8888/api/private/v1/users/${id}`,
+        method: "GET",
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      })
+        .then((res) => {
+          // console.log(res);
+          let { data, meta } = res.data;
+          if (meta.status === 200) {
+            this.editForm.id = data.id;
+            this.editForm.username = data.username;
+            this.editForm.email = data.email;
+            this.editForm.mobile = data.mobile;
+          }
+        })
+        .catch((err) => {});
+    },
+    //编辑框隐藏
+    editHide() {
+      this.isShowEdit = false;
+      // this.editForm.username = "";
+      // this.editForm.email = "";
+      // this.editForm.mobile = "";
+    },
+
+    //编剧用户资料
+    editFn() {
+      this.$http({
+        url: `http://localhost:8888/api/private/v1/users/${this.editForm.id}`,
+        method: "PUT",
+        data: {
+          email: this.editForm.email,
+          mobile: this.editForm.mobile,
+        },
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      })
+        .then((res) => {
+          // console.log(res);
+          let { data, meta } = res.data;
+          if (meta.status === 200) {
+            this.$message.success(meta.msg);
+            this.isShowEdit = false;
+            this.editForm.id = ''
+            this.editForm.username = "";
+            this.editForm.email = "";
+            this.editForm.mobile = "";
+            this.getDataList()
+          }else{
+            this.$message.error(meta.msg)
+          }
+        })
+        .catch((err) => {});
     },
   },
   mounted() {
