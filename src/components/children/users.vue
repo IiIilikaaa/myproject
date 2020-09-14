@@ -190,9 +190,9 @@ export default {
     //获取数据
     getDataList() {
       this.$http({
-        url: `http://localhost:8888/api/private/v1/users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`,
+        url: `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`,
         method: "GET",
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+         //axios中设置请求头的方法
       })
         .then((res) => {
           //console.log(res);
@@ -241,10 +241,10 @@ export default {
     //新增用户
     addFn() {
       this.$http({
-        url: "http://localhost:8888/api/private/v1/users",
+        url: "users",
         method: "POST",
         data: this.addForm,
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+         //axios中设置请求头的方法
       }).then((res) => {
         // console.log(res);
         let { meta } = res.data;
@@ -267,9 +267,9 @@ export default {
     //删除用户
     del(id) {
       this.$http({
-        url: `http://localhost:8888/api/private/v1/users/${id}`,
+        url: `users/${id}`,
         method: "DELETE",
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+         //axios中设置请求头的方法
       }).then((res) => {
         // console.log(res);
         let { meta } = res.data;
@@ -289,9 +289,9 @@ export default {
     editShow(id) {
       this.isShowEdit = true;
       this.$http({
-        url: `http://localhost:8888/api/private/v1/users/${id}`,
+        url: `users/${id}`,
         method: "GET",
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+         //axios中设置请求头的方法
       })
         .then((res) => {
           // console.log(res);
@@ -315,13 +315,13 @@ export default {
     //编剧用户资料
     editFn() {
       this.$http({
-        url: `http://localhost:8888/api/private/v1/users/${this.editForm.id}`,
+        url: `users/${this.editForm.id}`,
         method: "PUT",
         data: {
           email: this.editForm.email,
           mobile: this.editForm.mobile,
         },
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+         //axios中设置请求头的方法
       })
         .then((res) => {
           // console.log(res);
@@ -345,8 +345,8 @@ export default {
       this.isShowRole = true;
       this.$http({
         method: "GET",
-        url: "http://localhost:8888/api/private/v1/roles",
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+        url: "roles",
+         //axios中设置请求头的方法
       })
         .then((res) => {
           // console.log(res);
@@ -356,8 +356,8 @@ export default {
             //根据id获取数据
             this.$http({
               method: "GET",
-              url: `http://localhost:8888/api/private/v1/users/${id}`,
-              headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+              url: `users/${id}`,
+               //axios中设置请求头的方法
             })
               .then((res) => {
                 let { meta, data } = res.data;
@@ -376,9 +376,9 @@ export default {
     roleUserFn() {
       this.$http({
         method: "PUT",
-        url: `http://localhost:8888/api/private/v1/users/${this.roleForm.id}/role`,
+        url: `users/${this.roleForm.id}/role`,
         data: { rid: this.roleForm.rid },
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+         //axios中设置请求头的方法
       })
         .then((res) => {
           let { meta } = res.data;
@@ -395,8 +395,8 @@ export default {
     setStatus(uid, type) {
       this.$http({
         method: "PUT",
-        url: `http://localhost:8888/api/private/v1/users/${uid}/state/${type}`,
-        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+        url: `users/${uid}/state/${type}`,
+         //axios中设置请求头的方法
       }).then(res=>{
         let {meta} = res.data
         if ( meta.status === 200 ) {
