@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <!-- 面包屑(蟹)导航 -->
+    <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
@@ -27,12 +27,12 @@
         <!-- slot-scope="scope"  获取本行数据的数据源 -->
         <template slot-scope="scope">
           <!-- {{scope.row.mg_state}} -->
-          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949" @change = 'setStatus(scope.row.id,scope.row.mg_state)'></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          {{scope.row.id}}
+          <!-- {{scope.row.id}} -->
           <el-button
             type="primary"
             icon="el-icon-edit"
@@ -40,7 +40,13 @@
             size="mini"
             @click="editShow(scope.row.id)"
           ></el-button>
-          <el-button type="success" icon="el-icon-check" circle size="mini"></el-button>
+          <el-button
+            type="success"
+            icon="el-icon-check"
+            circle
+            size="mini"
+            @click="roleFn(scope.row.id)"
+          ></el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
@@ -104,6 +110,31 @@
         <el-button type="primary" @click="editFn">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 用户角色页面 -->
+    <el-dialog title="用户角色" :visible.sync="isShowRole">
+      <!-- {{form}} -->
+      <el-form :model="roleForm">
+        <el-form-item label="用户名" :label-width="dialogWidth">
+          <el-input v-model="roleForm.username" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="选择角色" :label-width="dialogWidth">
+          {{roleForm.rid}}
+          <el-select placeholder="请选择" v-model="roleForm.rid">
+            <el-option label="请选择" :value="-1"></el-option>
+            <el-option
+              v-for="item in optionName"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShowRole=false">取 消</el-button>
+        <el-button type="primary" @click="roleUserFn">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -123,7 +154,6 @@ export default {
       total: 0,
       //查询参数
       query: "",
-
       //新增显示
       isShow: false,
       //新增框的宽
@@ -144,6 +174,16 @@ export default {
         email: "",
         mobile: "",
       },
+      //选择用户角色框
+      isShowRole: false,
+      //用户角色数据
+      roleForm: {
+        username: "",
+        id: "",
+        rid: "",
+      },
+      //用户角色下拉框数据
+      optionName: [],
     };
   },
   methods: {
@@ -244,7 +284,6 @@ export default {
         }
       });
     },
-
     //编辑框显示
     //根据id获取数据
     editShow(id) {
@@ -273,7 +312,6 @@ export default {
       // this.editForm.email = "";
       // this.editForm.mobile = "";
     },
-
     //编剧用户资料
     editFn() {
       this.$http({
@@ -291,18 +329,85 @@ export default {
           if (meta.status === 200) {
             this.$message.success(meta.msg);
             this.isShowEdit = false;
-            this.editForm.id = ''
+            this.editForm.id = "";
             this.editForm.username = "";
             this.editForm.email = "";
             this.editForm.mobile = "";
-            this.getDataList()
-          }else{
-            this.$message.error(meta.msg)
+            this.getDataList();
+          } else {
+            this.$message.error(meta.msg);
           }
         })
         .catch((err) => {});
     },
+    //选择用户角色
+    roleFn(id) {
+      this.isShowRole = true;
+      this.$http({
+        method: "GET",
+        url: "http://localhost:8888/api/private/v1/roles",
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      })
+        .then((res) => {
+          // console.log(res);
+          let { meta, data } = res.data;
+          if (meta.status === 200) {
+            this.optionName = data;
+            //根据id获取数据
+            this.$http({
+              method: "GET",
+              url: `http://localhost:8888/api/private/v1/users/${id}`,
+              headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+            })
+              .then((res) => {
+                let { meta, data } = res.data;
+                if (meta.status === 200) {
+                  this.roleForm.username = data.username;
+                  this.roleForm.id = data.id;
+                  this.roleForm.rid = data.rid;
+                }
+              })
+              .catch((err) => {});
+          }
+        })
+        .catch((err) => {});
+    },
+    //根据id 修改用户角色
+    roleUserFn() {
+      this.$http({
+        method: "PUT",
+        url: `http://localhost:8888/api/private/v1/users/${this.roleForm.id}/role`,
+        data: { rid: this.roleForm.rid },
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      })
+        .then((res) => {
+          let { meta } = res.data;
+          if (meta.status === 200) {
+            this.$message.success(meta.msg);
+          } else {
+            this.$message.error(meta.msg);
+          }
+          this.isShowRole = false;
+        })
+        .catch((err) => {});
+    },
+    //设置用户状态
+    setStatus(uid, type) {
+      this.$http({
+        method: "PUT",
+        url: `http://localhost:8888/api/private/v1/users/${uid}/state/${type}`,
+        headers: { Authorization: window.localStorage.getItem("token") }, //axios中设置请求头的方法
+      }).then(res=>{
+        let {meta} = res.data
+        if ( meta.status === 200 ) {
+          this.$message.success(meta.msg)
+        }else{
+          this.$message.error(meta.msg)
+        }
+      }).catch(err=>{})
+    },
   },
+
   mounted() {
     this.getDataList();
   },
