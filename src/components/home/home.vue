@@ -24,15 +24,15 @@ export default {
     Sidebar: Sidebar,
   },
   mounted() {
-    let token = window.localStorage.getItem("token");
-    if (!token) {
-      this.$message({
-        showClose: true,
-        message: "请先登录哦!",
-        type: "warning",
-      });
-      this.$router.push("/login");
-    }
+    // let token = window.localStorage.getItem("token");
+    // if (!token) {
+    //   this.$message({
+    //     showClose: true,
+    //     message: "请先登录哦!",
+    //     type: "warning",
+    //   });
+    //   this.$router.push("/login");
+    // }
   },
 };
 </script>

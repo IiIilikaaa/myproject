@@ -48,7 +48,7 @@ export default {
             data: this.userObj,
           })
             .then((res) => {
-              console.log(res);
+              // console.log(res);
               let { data, meta } = res.data;
               if (meta.status === 200) {
                 window.localStorage.setItem("token", data.token);
