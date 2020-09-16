@@ -12,7 +12,6 @@ import './css/index.css'
 import ElementUI from 'element-ui'
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
 
-
 Vue.use(ElementUI)
 
 //使用axios插件

@@ -1,11 +1,7 @@
 <template>
-  <el-card>
+  <el-card >
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    <Bread one='用户管理' two="用户列表"/>
     <!-- 搜索框 -->
     <el-row class="myrow">
       <el-col :span="6">
@@ -139,6 +135,8 @@
 </template>
 
 <script>
+//引入封装面包屑导航
+import Bread from '../../bread/bread.vue'
 export default {
   data() {
     return {
@@ -407,7 +405,7 @@ export default {
       }).catch(err=>{})
     },
   },
-
+  components : {Bread},
   mounted() {
     this.getDataList();
   },
