@@ -5,6 +5,7 @@ import Home from '../components/home/home.vue'
 import Users from '@/components/children/users/users'
 import Rights from '@/components/children/rights/rights.vue'
 import Roles from '@/components/children/roles/roles'
+import Goods from '@/components/children/goods/goods'
 
 Vue.use(Router)
 
@@ -15,6 +16,7 @@ const routes =  [
     {path:'/users',name:'users',component:Users},
     {path:'/rights',name:'rights',component:Rights},
     {path:'/roles',name:'roles',component:Roles},
+    {path:'/goods',name:'goods',component:Goods},
   ]
 },
   //重定向

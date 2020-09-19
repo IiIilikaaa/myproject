@@ -7,10 +7,16 @@ import router from './router'
 import myaxios from './assets/js/myaxios'
 // 引入index.css
 import './css/index.css'
+//引入element 树状插件
+//common 
+const ElTreeGrid = require('element-tree-grid');
+Vue.component(ElTreeGrid.name,ElTreeGrid);
 
 // 引入element-ui
 import ElementUI from 'element-ui'
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
+
+
 
 Vue.use(ElementUI)
 
