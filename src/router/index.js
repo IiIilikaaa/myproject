@@ -5,7 +5,9 @@ import Home from '../components/home/home.vue'
 import Users from '@/components/children/users/users'
 import Rights from '@/components/children/rights/rights.vue'
 import Roles from '@/components/children/roles/roles'
+import Categories from '@/components/children/categories/categories'
 import Goods from '@/components/children/goods/goods'
+import Goodsadd from '@/components/children/Goodsadd/goodsadd'
 
 Vue.use(Router)
 
@@ -16,7 +18,9 @@ const routes =  [
     {path:'/users',name:'users',component:Users},
     {path:'/rights',name:'rights',component:Rights},
     {path:'/roles',name:'roles',component:Roles},
+    {path:'/categories',name:'categories',component:Categories},
     {path:'/goods',name:'goods',component:Goods},
+    {path:'/goods/add',name:'goodsadd',component:Goodsadd}
   ]
 },
   //重定向

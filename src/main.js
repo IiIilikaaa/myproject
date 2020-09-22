@@ -16,7 +16,16 @@ Vue.component(ElTreeGrid.name,ElTreeGrid);
 import ElementUI from 'element-ui'
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
 
+// 引入vue-quill-editor 
+// 基于 Quill、适用于 Vue 的富文本编辑器，支持服务端渲染和单页应用。
+// 全局 引用
+import VueQuillEditor from 'vue-quill-editor'
 
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
+Vue.use(VueQuillEditor, /* { default global options } */)
 
 Vue.use(ElementUI)
 
