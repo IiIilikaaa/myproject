@@ -7,7 +7,9 @@ import Rights from '@/components/children/rights/rights.vue'
 import Roles from '@/components/children/roles/roles'
 import Categories from '@/components/children/categories/categories'
 import Goods from '@/components/children/goods/goods'
-import Goodsadd from '@/components/children/Goodsadd/goodsadd'
+import Goodsadd from '@/components/children/goodsAdd/goodsadd'
+import Orders from '@/components/children/orders/orders.vue'
+import Reports from '@/components/children/reports/reports.vue'
 
 Vue.use(Router)
 
@@ -20,7 +22,9 @@ const routes =  [
     {path:'/roles',name:'roles',component:Roles},
     {path:'/categories',name:'categories',component:Categories},
     {path:'/goods',name:'goods',component:Goods},
-    {path:'/goods/add',name:'goodsadd',component:Goodsadd}
+    {path:'/goods/add',name:'goodsadd',component:Goodsadd},
+    {path:'/orders',name:'orders',component:Orders},
+    {path:'/reports',name:'reports',component:Reports}
   ]
 },
   //重定向
